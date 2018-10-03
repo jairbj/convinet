@@ -17,6 +17,9 @@ require "sprockets/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Load application ENV vars and merge with existing ENV vars. Loaded here so can use values in initializers.
+ENV.update YAML.load_file('config/convinet.yml')[Rails.env] rescue {}
+
 module Convinet
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -29,5 +32,6 @@ module Convinet
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+    
   end
 end

@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    title
+      = ENV['convinet_titulo'] 
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons'
+    = stylesheet_link_tag 'https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css'
+  body.login-page.sidebar-collapse
+  nav#sectionsNav.navbar.navbar-transparent.navbar-color-on-scroll.fixed-top.navbar-expand-lg[color-on-scroll="100"]
+    .container
+      .navbar-translate
+        a.navbar-brand[href="https://demos.creative-tim.com/material-kit/index.html"]
+          = ENV['convinet_titulo']         
+  .page-header.header-filter[style="background-image: url('../assets/background.jpg'); background-size: cover; background-position: top center;"]
+    = yield  
+    footer.footer
+      .container        
+        .copyright.float-right
+          | Powered by 
+          a[href="https://github.com/jairbj/convinet" target="_blank"]
+            |CONVINET
+              
+

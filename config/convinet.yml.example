@@ -1,0 +1,4 @@
+production:
+  titulo: <%= ENV.fetch("CONVINET_TITULO") { "CONVINET" } %>
+development:
+  titulo: CONVINET
