@@ -12,7 +12,7 @@ RSpec.describe Usuario, type: :model do
       end
     end
   end
-  
+
   context 'validacoes' do    
     let(:usuario) { build(:usuario) }
     it 'o FACTORIE é válido' do
@@ -51,7 +51,7 @@ RSpec.describe Usuario, type: :model do
       end
 
       it 'tem que ser numérico' do
-        shoulf validate_numericalitt_of(:cpf)
+        should validate_numericalitt_of(:cpf)
       end
     end
 

@@ -64,7 +64,7 @@ end
 group :test do
   gem 'capybara'
   gem 'capybara-email'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'shoulda-matchers'
 end
 

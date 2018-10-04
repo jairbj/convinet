@@ -10,7 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_03_185655) do
+ActiveRecord::Schema.define(version: 2018_10_04_201932) do
+
+  create_table "enderecos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "usuario_id", null: false
+    t.string "rua", limit: 80, default: "", null: false
+    t.string "numero", limit: 20, default: "", null: false
+    t.string "complemento", limit: 40, default: "", null: false
+    t.string "bairro", limit: 60, default: "", null: false
+    t.string "cidade", limit: 60, default: "", null: false
+    t.string "estado", limit: 2, default: "", null: false
+    t.string "cep", limit: 8, default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["usuario_id"], name: "index_enderecos_on_usuario_id"
+  end
+
+  create_table "telefones", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "usuario_id", null: false
+    t.string "ddd", limit: 2, default: "", null: false
+    t.string "numero", limit: 9, default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["usuario_id"], name: "index_telefones_on_usuario_id"
+  end
 
   create_table "usuarios", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "nome", default: "", null: false
@@ -32,4 +55,6 @@ ActiveRecord::Schema.define(version: 2018_10_03_185655) do
     t.index ["reset_password_token"], name: "index_usuarios_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "enderecos", "usuarios"
+  add_foreign_key "telefones", "usuarios"
 end
