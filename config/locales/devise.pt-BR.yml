@@ -1,0 +1,23 @@
+pt-BR:
+  devise:
+    failure:
+      invalid: "%{authentication_keys} ou senha inválidos!"
+      not_found_in_database: "%{authentication_keys} ou senha inválidos!"
+      invalid_token: "Token de autenticação inválido"
+    mailer:
+      confirmation_instructions:
+        subject: "Confirmar sua conta no BuscaCorreios.com"
+      reset_password_instructions:
+        subject: "Redefinição de sua senha no BuscaCorreios.com"
+      unlock_instructions:
+        subject: "Instruções para desbloquear sua conta no BuscaCorreios.com"
+      password_change:
+        subject: "Sua senha no BuscaCorreios.com foi alterada"
+    registrations:
+      new:
+        sign_up: "Cadastre-se"
+      edit:
+        currently_waiting_confirmation_for_email: "Esperando a confirmação de e-mail: %{email}"
+    shared:
+      links:
+        sign_up: "Cadastre-se"
