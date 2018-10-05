@@ -1,0 +1,38 @@
+.container  
+  .row
+
+    .col-lg-4.col-md-6.ml-auto.mr-auto
+      .card.card-login
+        = form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'form'}) do |f|        
+          .card-header.card-header-primary.text-center
+            h4.card-title
+              | Login                
+          p.description.text-center.margin-10
+            | Faça o login para acompanhar, fazer uma nova, alterar ou cancelar sua contribuição.          
+          .card-body                
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | mail                
+              = f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email...", class: "form-control"
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | lock_outline              
+              = f.password_field :password, autocomplete: "off", placeholder: "Senha...", class: "form-control"
+          - if devise_mapping.rememberable?
+            .container
+              .text-center
+                .field
+                  => f.check_box :remember_me
+                  =< f.label "Lembrar-me"
+          .container
+            .text-center
+              = f.submit t('.sign_in'), class: "btn btn btn-primary btn-round"
+          .container
+            = render 'devise/shared/links'
+          .container
+            = render 'partials/flash'
+

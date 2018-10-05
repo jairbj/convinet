@@ -1,0 +1,9 @@
+/ Available flashs:
+  :success, :info, :notice(:info) :warning, :danger, :error(:danger), :alert (:danger)
+- flash.each do |key, value|  
+  - key = 'danger' if key == 'error'
+  - key = 'danger' if key == 'alert'
+  - key = 'info' if key == 'notice'
+  div[class="alert alert-#{key}"]
+    .container        
+      = value
