@@ -59,13 +59,13 @@ RSpec.describe Endereco, type: :model do
     context 'cidade' do
       it 'tem que ter entre 2 e 60 caracteres' do
         should validate_length_of(:cidade).
-        is_at_least(2).is_at_most(80)
+        is_at_least(2).is_at_most(60)
       end
     end
 
     context 'estado' do
       it 'tem que ter 2 caracteres correspondente a sigla do estado' do
-        should validate_length_of(:estado).is_at_most(2)
+        should validate_length_of(:estado).is_equal_to(2)
       end
     end
 

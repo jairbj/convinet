@@ -33,7 +33,7 @@ RSpec.describe Usuario, type: :model do
 
     context 'tem que ser único' do
       it 'email' do
-        should validate_uniqueness_of(:email)
+        should validate_uniqueness_of(:email).case_insensitive
       end
       it 'cpf' do
         should validate_uniqueness_of(:cpf)
@@ -46,12 +46,12 @@ RSpec.describe Usuario, type: :model do
         expect(usuario).to_not be_valid
       end
 
-      it 'tem que ter 12 digitos' do
-        should validate_length_of(:cpf).is_equal_to(12)
+      it 'tem que ter 11 digitos' do
+        should validate_length_of(:cpf).is_equal_to(11)
       end
 
       it 'tem que ser numérico' do
-        should validate_numericalitt_of(:cpf)
+        should validate_numericality_of(:cpf)
       end
     end
 

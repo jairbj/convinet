@@ -14,7 +14,7 @@ RSpec.describe Telefone, type: :model do
       end
       it 'numero' do
         should validate_presence_of(:numero)
-      end      
+      end
     end
 
     context 'ddd' do
@@ -23,7 +23,7 @@ RSpec.describe Telefone, type: :model do
       end
 
       it 'tem que ser numerico' do
-        should validate_numericalitt_of(:ddd)
+        should validate_numericality_of(:ddd)
       end
     end
 
@@ -34,7 +34,7 @@ RSpec.describe Telefone, type: :model do
       end
 
       it 'tem que ser numerico' do
-        should validate_numericalitt_of(:numero)
+        should validate_numericality_of(:numero)
       end
     end    
   end
