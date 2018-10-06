@@ -1,8 +1,7 @@
 .container  
   .row
-
-    .col-lg-4.col-md-6.ml-auto.mr-auto
-      .card.card-login
+    .col-lg-5.col-md-6.ml-auto.mr-auto
+      .card
         = form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'form'}) do |f|        
           .card-header.card-header-primary.text-center
             h4.card-title
@@ -34,5 +33,5 @@
           .container
             = render 'devise/shared/links'
           .container
-            = render 'partials/flash'
+            
 

@@ -1,3 +1,24 @@
-.margin-10 {
-  margin: 10px;
+.alert {
+  margin-bottom: 30px;
+}
+
+.card {
+  padding-bottom: 10px;
+}
+
+.footer {
+  color: white;
+  margin-top: 40px;
+}
+
+.footer a {
+  color: white;
+}
+
+.page-header {
+  height: 120px;
+}
+
+.header-filter::before {
+  background: none;
 }

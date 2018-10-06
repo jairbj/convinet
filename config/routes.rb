@@ -1,11 +1,21 @@
 Rails.application.routes.draw do
   resources :enderecos
   resources :telefones
-  devise_for :usuarios
+  
   get 'paginas/home'
 
   devise_scope :usuario do
     root :to => 'devise/sessions#new'
+    get     'login',      to: 'devise/sessions#new'
+    get     'cadastro',   to: 'devise/registrations#new'
+    get     'logout',     to: 'devise/sessions#destroy'
+    delete  'logout',     to: 'devise/sessions#destroy'
   end
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
+  devise_for :usuarios, path_names: { sign_in: 'login',
+                                      sign_out: 'logout',
+                                      sign_up: 'cadastro',
+                                      edit: 'perfil' },
+                        controllers: { registrations: 'usuarios/registrations'}
+  
 end
