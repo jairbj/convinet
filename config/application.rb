@@ -17,13 +17,12 @@ require "sprockets/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-# Load application ENV vars and merge with existing ENV vars. Loaded here so can use values in initializers.
-ENV.update YAML.load_file('config/convinet.yml')[Rails.env] rescue {}
-
 module Convinet
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
+
+    config.convinet = config_for(:convinet)
 
     config.i18n.default_locale = 'pt-BR'
 

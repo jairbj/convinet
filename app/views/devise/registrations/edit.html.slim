@@ -1,0 +1,73 @@
+.container  
+  .row
+    .col-lg-7.col-md-6.ml-auto.mr-auto
+      .card
+        = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'form'}) do |f|
+          .card-header.card-header-primary.text-center
+            h4.card-title
+              | Meus Dados
+          p.description.text-center.margin-10
+            | Edite seus dados abaixo
+          - if resource.errors.any?
+            .alert.alert-danger
+              = devise_error_messages!
+          .card-body            
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | person                              
+              = f.text_field :nome, autofocus: true, autocomplete: "off", placeholder: "Nome...", class: "form-control"
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | mail                
+              = f.email_field :email, autocomplete: "off", placeholder: "Email...", class: "form-control"
+              - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+                .text-center
+                  = t('.currently_waiting_confirmation_for_email', email: resource.unconfirmed_email)
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | assignment_ind                
+              .text
+                strong
+                  |CPF:
+                =<>CPF.new(current_usuario.cpf).formatted
+                |(não é permitido alterar o CPF)
+            br
+            .text-center
+              |(caso não queira alterar a senha, não preencha os dois campos a seguir)
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | lock_outline              
+              = f.password_field :password, autocomplete: "off", placeholder: "Senha... ", class: "form-control"            
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | lock_outline              
+              = f.password_field :password_confirmation, autocomplete: "off", placeholder: "Confirmar Senha...", class: "form-control"
+            br
+            br
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | lock_outline              
+              = f.password_field :current_password, autocomplete: "off", placeholder: "Senha atual...", class: "form-control"
+            .text-center
+              |(
+              = t('.we_need_your_current_password_to_confirm_your_changes')
+              |)
+          .container
+            .text-center
+              = f.submit t('.update'), class: "btn btn btn-primary btn-round"
+          /.container
+          /  = button_to t('.cancel_my_account'), registration_path(resource_name), data: { confirm: t('.are_you_sure') }, method: :delete
+          .container.margin-10
+            = link_to t('devise.shared.links.back'), :back

@@ -1,11 +1,12 @@
 Rails.application.routes.draw do
-  resources :enderecos
-  resources :telefones
+  resources :enderecos, except: [:destroy, :index]
+  resources :telefones, except: [:destroy, :index]
   
   get 'paginas/home'
 
-  devise_scope :usuario do
-    root :to => 'devise/sessions#new'
+  root :to => 'paginas#home'
+
+  devise_scope :usuario do    
     get     'login',      to: 'devise/sessions#new'
     get     'cadastro',   to: 'devise/registrations#new'
     get     'logout',     to: 'devise/sessions#destroy'

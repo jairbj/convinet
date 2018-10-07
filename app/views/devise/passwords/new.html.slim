@@ -1,0 +1,25 @@
+.container  
+  .row
+    .col-lg-5.col-md-6.ml-auto.mr-auto
+      .card
+        = form_for(resource, as: resource_name, url: password_path(resource_name), html: {method: post, class: 'form'}) do |f|        
+          .card-header.card-header-primary.text-center
+            h4.card-title
+              = t('.forgot_your_password')                
+          p.description.text-center.margin-10
+            | Se você esqueceu sua senha, preencha seu e-mail para que possamos lhe enviar instruções para alterá-la.
+          - if resource.errors.any?
+            .alert.alert-danger
+              = devise_error_messages!
+          .card-body                
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | mail                
+              = f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email...", class: "form-control"                      
+          .container
+            .text-center
+              = f.submit t('.send_me_reset_password_instructions'), class: "btn btn btn-primary btn-round"
+          .container.margin-10
+            = render 'devise/shared/links'

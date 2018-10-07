@@ -2,7 +2,7 @@ doctype html
 html
   head
     title
-      = ENV['convinet_titulo'] 
+      = Rails.configuration.convinet['titulo']
     meta[content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport']
     = csrf_meta_tags
     = csp_meta_tag
@@ -15,7 +15,7 @@ html
       .container
         .navbar-translate
           .navbar-brand
-            = ENV['convinet_titulo']                 
+            = Rails.configuration.convinet['titulo']
     .page-header.header-filter        
     .container
       .text-center
