@@ -1,0 +1,30 @@
+nav#sectionsNav.navbar.navbar-transparent.navbar-color-on-scroll.fixed-top.navbar-expand-lg[color-on-scroll="100"]  
+  .container
+    .navbar-translate
+      .navbar-brand
+        = Rails.configuration.convinet['titulo']
+      - if usuario_signed_in?
+        button.navbar-toggler[type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation"]
+          span.sr-only
+            |Toggle navigation
+          span.navbar-toggler-icon
+          span.navbar-toggler-icon
+          span.navbar-toggler-icon
+    - if usuario_signed_in?
+      .collapse.navbar-collapse
+        ul.navbar-nav.ml-auto
+          li.nav-item
+            = link_to '#', class: 'nav-link'
+              i.material-icons
+                |how_to_vote
+              | Minhas Contibuições
+          li.nav-item
+            = link_to edit_usuario_registration_path, class: 'nav-link'
+              i.material-icons
+                |assignment_ind
+              | Meus dados
+          li.nav-item
+            = link_to logout_path, method: :delete, class: 'nav-link'
+              i.material-icons
+                |exit_to_app
+              | Sair

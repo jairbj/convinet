@@ -11,17 +11,13 @@ html
     = stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons'
     = stylesheet_link_tag 'https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css'
   body.sidebar-collapse
-    nav#sectionsNav.navbar.navbar-transparent.navbar-color-on-scroll.fixed-top.navbar-expand-lg[color-on-scroll="100"]
-      .container
-        .navbar-translate
-          .navbar-brand
-            = Rails.configuration.convinet['titulo']
+    =render 'partials/navbar'
     .page-header.header-filter        
     .container
       .text-center
         = render 'partials/flash'
       = yield          
-    = render ('partials/footer')
+    = render 'partials/footer'
               
 
     
