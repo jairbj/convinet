@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  resources :enderecos, except: [:destroy, :index]
-  resources :telefones, except: [:destroy, :index]
+  resources :enderecos, only: [:new, :create, :edit, :update]
+  resources :telefones, only: [:new, :create, :edit, :update]
   
   get 'paginas/home'
 

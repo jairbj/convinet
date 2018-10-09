@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
+  include FlashMessageHelper
+
   def after_sign_in_path_for(_resource)
-    edit_usuario_registration_path
+    root_path
   end
 
   def after_sign_out_path_for(_resource_or_scope)

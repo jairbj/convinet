@@ -1,0 +1,26 @@
+.container  
+  .row
+    .col-lg-5.col-md-6.ml-auto.mr-auto
+      .card
+        = form_for @telefone, html: {class: 'form'} do |f|
+          .card-header.card-header-primary.text-center
+            h4.card-title
+              | Telefone
+          p.description.text-center.margin-10
+            | Cadastro de Telefone          
+          .card-body            
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | phone                             
+              = f.text_field :ddd, autofocus: true, autocomplete: "off", placeholder: "DDD...", class: "form-control", maxlength: 2
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | phone               
+              = f.text_field :numero, autocomplete: "off", placeholder: "Número (somente números)...", class: "form-control", maxlength: 9            
+          .container
+            .text-center
+              = f.submit "Cadastrar Telefone", class: "btn btn btn-primary btn-round"          
