@@ -1,6 +1,12 @@
 production:
   titulo: <%= ENV.fetch("CONVINET_TITULO") { "CONVINET" } %>  
   prefixo_plano_pagseguro: <%= ENV.fetch("CONVINET_PREF_PLAN_PAG") { "PLAN_" } %>
+  pagseguro_email: <%= ENV.fetch("PAGSEGURO_EMAIL")%>
+  pagseguro_token: <%= ENV.fetch("PAGSEGURO_TOKEN")%>
+  pagseguro_environment: production
 development:
   titulo: CONVINET
   prefixo_plano_pagseguro: OMF_
+  pagseguro_email: email@pagseguro.com.br
+  pagseguro_token: 12345678900
+  pagseguro_environment: sandbox

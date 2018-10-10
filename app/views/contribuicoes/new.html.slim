@@ -1,0 +1,20 @@
+.container  
+  .row
+    .col-lg-5.col-md-6.ml-auto.mr-auto
+      .card
+        = form_for @contribuicao, html: {class: 'form'} do |f|
+          .card-header.card-header-primary.text-center
+            h4.card-title
+              | Contribuição Mensal
+          p.description.text-center.margin-10
+            | Informe abaixo os dados para fazer sua contribuição mensal         
+          .card-body            
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | attach_money                      
+              = f.text_field :valor, autofocus: true, autocomplete: "off", placeholder: "Valor mensal (sem casas decimais)...", class: "form-control", maxlength: 4            
+          .container
+            .text-center
+              = f.submit "Fazer contribuição", class: "btn btn btn-primary btn-round"          

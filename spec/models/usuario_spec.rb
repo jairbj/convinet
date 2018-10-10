@@ -10,6 +10,10 @@ RSpec.describe Usuario, type: :model do
       it 'um telefone' do
         should have_one(:telefone)
       end
+
+      it 'contribuições' do
+        should have_many(:contribuicoes)
+      end
     end
   end
 

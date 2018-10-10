@@ -4,8 +4,28 @@
       .card      
         .card-header.card-header-primary.text-center
           h4.card-title
-            = Rails.configuration.convinet['titulo']
-        p.description.text-center.margin-10
-          | Bem vindo ao sistema de Contribuições via Internet
+            |Minhas contribuições        
         .card-body
-          |Teste
+          - if @contribuicoes.any?
+            .text-center                            
+              .btn.btn-primary
+                |Fazer nova contribuição mensal              
+            .text-center
+              h4
+                |Contribuições mensais
+            .text-left
+              |Contribuição ...
+              br
+              |Contribuição ...
+              br
+              |Contribuição ...
+              br
+              |Contribuição ...
+              br            
+          - else            
+            .text-center            
+              h3
+                |Nenhuma contribuição mensal até o momento.              
+              = link_to :new_plano, class: 'btn btn-primary'
+                |Fazer nova contribuição mensal
+            

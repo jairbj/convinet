@@ -5,5 +5,5 @@
   - key = 'danger' if key == 'alert'
   - key = 'info' if key == 'notice'
   div[class="alert alert-#{key}"]
-    .container        
-      = value
+    .container
+      = value.html_safe
