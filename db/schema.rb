@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_04_201932) do
+ActiveRecord::Schema.define(version: 2018_10_10_002516) do
+
+  create_table "contribuicoes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "usuario_id", null: false
+    t.bigint "plano_id", null: false
+    t.string "codigo", default: "", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["plano_id"], name: "index_contribuicoes_on_plano_id"
+    t.index ["usuario_id"], name: "index_contribuicoes_on_usuario_id"
+  end
 
   create_table "enderecos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "usuario_id", null: false
@@ -24,6 +35,15 @@ ActiveRecord::Schema.define(version: 2018_10_04_201932) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["usuario_id"], name: "index_enderecos_on_usuario_id"
+  end
+
+  create_table "planos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "nome", default: "", null: false
+    t.string "identificador", default: "", null: false
+    t.decimal "valor", precision: 4, scale: 2, null: false
+    t.string "codigo", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "telefones", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -55,6 +75,8 @@ ActiveRecord::Schema.define(version: 2018_10_04_201932) do
     t.index ["reset_password_token"], name: "index_usuarios_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "contribuicoes", "planos"
+  add_foreign_key "contribuicoes", "usuarios"
   add_foreign_key "enderecos", "usuarios"
   add_foreign_key "telefones", "usuarios"
 end

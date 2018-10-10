@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
+  resources :contribuicoes
   resources :enderecos, only: [:new, :create, :edit, :update]
   resources :telefones, only: [:new, :create, :edit, :update]
   
   get 'paginas/home'
 
-  root :to => 'paginas#home'
+  root :to => 'contribuicoes#index'
 
   devise_scope :usuario do    
     get     'login',      to: 'devise/sessions#new'

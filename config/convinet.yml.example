@@ -1,4 +1,6 @@
 production:
   titulo: <%= ENV.fetch("CONVINET_TITULO") { "CONVINET" } %>  
+  prefixo_plano_pagseguro: <%= ENV.fetch("CONVINET_PREF_PLAN_PAG") { "PLAN_" } %>
 development:
   titulo: CONVINET
+  prefixo_plano_pagseguro: OMF_
