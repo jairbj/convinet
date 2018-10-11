@@ -34,6 +34,12 @@
               .input-group-prepend
                 span.input-group-text
                   i.material-icons
+                    | calendar_today
+              = f.text_field :nascimento, autocomplete: "off", placeholder: "Data de nascimento (DD/MM/AAAA)...", maxlength: 10, class: "form-control"
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
                     | lock_outline              
               = f.password_field :password, autocomplete: "off", placeholder: "Senha...", class: "form-control"
             .input-group

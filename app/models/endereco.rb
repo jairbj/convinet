@@ -1,5 +1,6 @@
 class Endereco < ApplicationRecord
   belongs_to :usuario
+  before_validation :upper_estado
 
   # Validações
   # rua
@@ -20,8 +21,14 @@ class Endereco < ApplicationRecord
   # estado
   validates_presence_of :estado
   validates_length_of :estado, is: 2
+  validates :estado, inclusion: {in: %w(AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO), 
+                                 message: 'não é uma sigla válida'}
   # cep
   validates_presence_of :cep
   validates_length_of :cep, is: 8
   validates_numericality_of :cep
+
+  def upper_estado
+    estado.upcase!
+  end
 end

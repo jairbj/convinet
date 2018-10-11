@@ -6,6 +6,7 @@ class DeviseCreateUsuarios < ActiveRecord::Migration[5.2]
       ## Dados Pessoais
       t.string :nome,               null: false, default: ""
       t.string :cpf,                null: false, default: "", limit: 11
+      t.date :nascimento,           null: false
 
 
       ## Database authenticatable

@@ -5,7 +5,7 @@ class PlanosController < ApplicationController
 
   def create
     @plano = Plano.new(plano_params)
-    if @plano.valor.integer?
+    if @plano.valid?
       plano = Plano.find_by(valor: @plano.valor)
       if plano
         redirect_to new_contribuicao_path(plano: plano.id)
@@ -25,7 +25,7 @@ class PlanosController < ApplicationController
         render :new
       end
     else
-      flash[:danger] = 'Valor inválido. Informe um valor inteiro sem casas decimais'
+      flash_errors(@plano)
       render :new
     end    
   end

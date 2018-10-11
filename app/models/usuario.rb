@@ -11,6 +11,11 @@ class Usuario < ApplicationRecord
   # Validações
   # Nome
   validates_presence_of :nome
+  # Nascimento
+  validates_presence_of :nascimento
+  validates_length_of :nascimento, is: 10
+  validates :nascimento, format: {with: /\A[0-9]{2}\/[0-9]{2}\/[0-9]{4}\z/, message: "formato inválido. Deve ser DD/MM/AAAA"}
+  
   # Email
   validates_presence_of :email 
   validates :email, email_format: true

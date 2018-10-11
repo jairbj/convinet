@@ -8,20 +8,32 @@
         .card-body
           - if @contribuicoes.any?
             .text-center                            
-              .btn.btn-primary
+              = link_to :new_plano, class: 'btn btn-primary'
                 |Fazer nova contribuição mensal              
             .text-center
               h4
                 |Contribuições mensais
-            .text-left
-              |Contribuição ...
-              br
-              |Contribuição ...
-              br
-              |Contribuição ...
-              br
-              |Contribuição ...
-              br            
+            .text-center
+              table.tabela-contribuicoes
+                thead.border-bottom
+                  tr
+                    td.border-right
+                      h4
+                        |Valor mensal
+                    td
+                      h4
+                        |Status
+                tbody
+                  - @contribuicoes.each do |c|
+                    tr
+                      td.border-right
+                        = link_to '#'
+                          |R$
+                          =< c.plano.valor.to_i
+                          |.00
+                      td
+                        = link_to '#'
+                          = c.status.to_s.capitalize
           - else            
             .text-center            
               h3
