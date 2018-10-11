@@ -21,6 +21,21 @@ class EnderecosController < ApplicationController
     end
   end
 
+  def edit
+    @endereco = current_usuario.endereco
+  end
+
+  def update
+    @endereco = current_usuario.endereco
+    if @endereco.update(endereco_params)
+      flash[:success] = 'Endereço atualizado com sucesso.'
+      redirect_to edit_usuario_registration_path
+    else
+      flash_errors(@endereco)
+      render :new
+    end
+  end
+
   private
 
   def endereco_params

@@ -7,7 +7,7 @@
             h4.card-title
               | Telefone
           p.description.text-center.margin-10
-            | Cadastro de Telefone          
+            | Atualizar Telefone          
           .card-body            
             .input-group
               .input-group-prepend
@@ -23,4 +23,4 @@
               = f.text_field :numero, autocomplete: "off", placeholder: "Número (somente números)...", class: "form-control", maxlength: 9            
           .container
             .text-center
-              = f.submit "Cadastrar Telefone", class: "btn btn btn-primary btn-round"
+              = f.submit "Atualizar Telefone", class: "btn btn btn-primary btn-round"

@@ -22,6 +22,21 @@ class TelefonesController < ApplicationController
 
   end
 
+  def edit
+    @telefone = current_usuario.telefone
+  end
+
+  def update
+    @telefone = current_usuario.telefone
+    if @telefone.update(telefone_params)
+      flash[:success] = 'Telefone atualizado com sucesso.'
+      redirect_to edit_usuario_registration_path
+    else
+      flash_errors(@telefone)
+      render :new
+    end
+  end
+
   private 
 
   # Never trust parameters from the scary internet,

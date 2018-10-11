@@ -4,7 +4,8 @@ Rails.application.routes.draw do
   resources :planos, only: [:new, :create]
 
   get 'contribuicoes/new/:plano', to: 'contribuicoes#new', as: 'new_contribuicao'
-  resources :contribuicoes, except: [:new]
+  get 'contribuicoes/verifica'
+  resources :contribuicoes, only: [:index, :create, :show]
 
   resources :enderecos, only: [:new, :create, :edit, :update]
 

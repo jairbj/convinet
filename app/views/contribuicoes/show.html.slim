@@ -1,0 +1,19 @@
+.container  
+  .row
+    .col-lg-7.col-md-6.ml-auto.mr-auto
+      .card      
+        .card-header.card-header-primary.text-center
+          h4.card-title
+            |Minha contribuição        
+        .card-body
+          h3.text-center
+            |Valor mensal: R$
+            =< @contribuicao.plano.valor.to_i
+            |,00
+          h4.text-center
+            |Status: 
+            = @contribuicao.status.to_s.capitalize
+          br
+          h4.text-center
+            |Pagamentos
+          

@@ -27,12 +27,12 @@
                   - @contribuicoes.each do |c|
                     tr
                       td.border-right
-                        = link_to '#'
+                        = link_to c
                           |R$
                           =< c.plano.valor.to_i
                           |.00
                       td
-                        = link_to '#'
+                        = link_to c
                           = c.status.to_s.capitalize
           - else            
             .text-center            

@@ -1,0 +1,49 @@
+.container  
+  .row
+    .col-lg-5.col-md-6.ml-auto.mr-auto
+      .card
+        = form_for @endereco, html: {class: 'form'} do |f|
+          .card-header.card-header-primary.text-center
+            h4.card-title
+              | Endereço
+          p.description.text-center.margin-10
+            | Atualizar Endereço          
+          .card-body            
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.fa.fa-road                    
+              = f.text_field :rua, autofocus: true, autocomplete: "off", placeholder: "Rua...", class: "form-control", maxlength: 80
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.fa.fa-location-arrow
+              = f.text_field :numero, autocomplete: "off", placeholder: "Número...", class: "form-control", maxlength: 20
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.fa.fa-plus                    
+              = f.text_field :complemento, autocomplete: "off", placeholder: "Complemento...", class: "form-control", maxlength: 40
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.fa.fa-location-arrow                    
+              = f.text_field :bairro, autocomplete: "off", placeholder: "Bairro...", class: "form-control", maxlength: 60
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.fa.fa-map
+              = f.text_field :cidade, autocomplete: "off", placeholder: "Cidade...", class: "form-control", maxlength: 60
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.fa.fa-location-arrow                    
+              = f.text_field :estado, autocomplete: "off", placeholder: "Estado (somente a sigla)...", class: "form-control", maxlength: 2
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.fa.fa-map-pin                    
+              = f.text_field :cep, autocomplete: "off", placeholder: "CEP (somente números)...", class: "form-control", maxlength: 8
+          .container
+            .text-center
+              = f.submit "Atualizar Endereço", class: "btn btn btn-primary btn-round"          

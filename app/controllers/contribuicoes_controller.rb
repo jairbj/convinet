@@ -4,7 +4,7 @@ class ContribuicoesController < ApplicationController
   before_action :checa_endereco
 
   def index    
-    @contribuicoes = current_usuario.contribuicoes
+    @contribuicoes = current_usuario.contribuicoes.order 'id desc'
   end
 
   def new
@@ -12,6 +12,38 @@ class ContribuicoesController < ApplicationController
     @contribuicao.plano = Plano.find(params[:plano]);
 
     @session = PagSeguro::Session.create.id
+  end
+
+  def show
+    @contribuicao = current_usuario.contribuicoes.find(params[:id])
+    
+    # Atualiza o status da contribuição
+    credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
+    @subscription = PagSeguro::Subscription.find_by_code(@contribuicao.codigo, credentials: credentials)
+
+    unless @subscription
+      flash[:danger] = 'Erro ao conectar ao PagSeguro. Por favor tente novamente. COD: #05'
+      puts 'PAGSEGURO -> ERRO BUSCAR CONTRIBUIÇÃO'
+      puts subscription.to_yaml
+      redirect_to contribuicoes_path
+      return
+    end
+
+    if @subscription.errors.any?
+      flash[:danger] = 'Erro ao conectar ao PagSeguro. Por favor tente novamente. COD: #06'
+      puts 'PAGSEGURO -> ERRO CRIAR CONTRIBUIÇÃO'
+      puts @subscription.errors.join('\n')
+      redirect_to contribuicoes_path
+      return
+    end
+
+    @contribuicao.atualizar_status(@subscription.status)    
+    @contribuicao.save
+
+    # Obtem os pagamentos
+    
+
+
   end
 
   def create
@@ -27,7 +59,26 @@ class ContribuicoesController < ApplicationController
     subscription = gera_subscription(@contribuicao)
 
     subscription.credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
-    subscription.create
+    begin
+      subscription.create      
+    rescue
+      if recupera_contribuicao(@contribuicao.usuario, true)
+        flash[:info] = 'Houve um erro na comunicação com o PagSeguro. 
+                        Verifique abaixo se sua contribuição foi cadastrada.
+                        Antes de tentar novamente, 
+                        verifique a fatura do seu cartão de crédito 
+                        e se já foi debitado, entre em contato com algum 
+                        responsável pelo projeto.'
+      else
+        flash[:danger] = 'Erro ao processar sua contribuição. 
+                          Antes de tentar novamente, 
+                          verifique a fatura do seu cartão de crédito 
+                          e se já foi debitado, entre em contato com algum 
+                          responsável pelo projeto.'
+      end
+      redirect_to root_path
+      return
+    end
 
     if subscription.errors.any?
       puts 'PAGSEGURO -> ERRO CRIAR CONTRIBUIÇÃO'
@@ -43,8 +94,10 @@ class ContribuicoesController < ApplicationController
     flash[:success] = 'Contribuição cadastrada com sucesso.'
 
     redirect_to root_path
+  end
 
-  end  
+  def verifica
+  end
 
   private
 
@@ -66,6 +119,59 @@ class ContribuicoesController < ApplicationController
       flash[:info] = 'Antes de poder fazer contribuições é necessário cadastrar seu endereço.'
       redirect_to :new_endereco      
     end
+  end
+
+  def recupera_contribuicao(usuario, aguarda = false)
+    sleep 5 if aguarda
+
+    credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
+
+    if PagSeguro.environment == :sandbox
+      email = 'user@sandbox.pagseguro.com.br'
+    else
+      email = usuario.email
+    end
+    
+    options = {
+      credentials: credentials,      
+      starts_at: Time.now.in_time_zone('Brasilia') - 15.minutes,
+      ends_at: Time.now.in_time_zone('Brasilia'),
+      sender_email: email
+    }
+
+    begin
+      report = PagSeguro::Subscription.search_by_date_interval(options)
+    rescue
+      return false
+    end
+
+    unless report.valid?
+      puts "PAGSEGURO: Erro recuperar contribuicao"
+      puts report.errors.join("\n")
+      puts options
+      return false
+    end
+      
+    contribuicoes_recuperadas = 0
+      
+    while report.next_page?      
+      report.next_page!
+      report.subscriptions.each do |s|
+        unless usuario.contribuicoes.find_by codigo: s.code          
+          plano = Plano.find_by nome: s.name
+          if plano
+            c = usuario.contribuicoes.new
+            c.codigo = s.code
+            c.atualizar_status(s.status)
+            c.plano = plano
+            contribuicoes_recuperadas += 1 if c.save
+          end
+        end
+      end    
+    end
+
+    return false unless contribuicoes_recuperadas
+    contribuicoes_recuperadas              
   end
 
   def gera_subscription(contribuicao)
