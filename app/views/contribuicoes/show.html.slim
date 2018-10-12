@@ -16,4 +16,26 @@
           br
           h4.text-center
             |Pagamentos
-          
+          .text-center
+              table.tabela-contribuicoes
+                thead.border-bottom
+                  tr
+                    td.border-right
+                      h4
+                        |Data da contribuição
+                    td
+                      h4
+                        |Status
+                tbody
+                  - @pagamentos.each do |p|
+                    tr
+                      td.border-right
+                        = p.scheduling_date
+                      td                        
+                        = status_pagamento_texto(p.status)
+          - unless @contribuicao.cancelado?
+            br
+            .container
+              .text-center
+                = link_to @contribuicao, class: 'btn btn-primary', data: { confirm: 'Tem certeza que deseja cancelar sua contribuição?' }, method: :delete
+                    |Cancelar Contribuição              

@@ -41,9 +41,7 @@ class ContribuicoesController < ApplicationController
     @contribuicao.save
 
     # Obtem os pagamentos
-    
-
-
+    @pagamentos = obtem_pagamentos(@contribuicao)
   end
 
   def create
@@ -96,7 +94,30 @@ class ContribuicoesController < ApplicationController
     redirect_to root_path
   end
 
-  def verifica
+  def destroy
+    @contribuicao = current_usuario.contribuicoes.find(params[:id])
+    
+    cancel = PagSeguro::SubscriptionCanceller.new(subscription_code: @contribuicao.codigo)
+
+    cancel.credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
+    
+    begin
+      cancel.save
+    rescue
+      flash[:error] = 'Houve um erro ao efetuar o cancelamento da sua contribuição. Por favor tente novamente'
+      redirect_to @contribuicao
+      return
+    end
+
+    if cancel.errors.any?
+      flash[:danger] = 'Houve um erro ao efetuar o cancelamento da sua contribuição. Por favor tente novamente'
+      puts 'PAGSEGURO -> ERRO CANCELAR CONTRIBUIÇÃO'
+      puts cancel.errors.join('\n')
+    else
+      flash[:success] = 'Contribuição cancelada com sucesso.'      
+    end
+
+    redirect_to @contribuicao
   end
 
   private
@@ -121,13 +142,35 @@ class ContribuicoesController < ApplicationController
     end
   end
 
+  def obtem_pagamentos(c)
+    options = { credentials: PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)}
+    report = PagSeguro::SubscriptionSearchPaymentOrders.new(c.codigo, '', options)
+
+    unless report.valid?
+      puts "PAGSEGURO: Erro recuperar contribuicao"
+      puts report.errors.join("\n")
+      puts options
+      return nil
+    end
+
+    pagamentos = Array.new
+    while report.next_page?
+      report.next_page!
+      
+      report.payment_orders.each do |p|
+        pagamentos << p
+      end
+    end
+    return pagamentos
+  end
+
   def recupera_contribuicao(usuario, aguarda = false)
     sleep 5 if aguarda
 
     credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
 
     if PagSeguro.environment == :sandbox
-      email = 'user@sandbox.pagseguro.com.br'
+      email = "user#{usuario.id}@sandbox.pagseguro.com.br"
     else
       email = usuario.email
     end
@@ -176,7 +219,7 @@ class ContribuicoesController < ApplicationController
 
   def gera_subscription(contribuicao)
     if PagSeguro.environment == :sandbox
-      email = 'user@sandbox.pagseguro.com.br'
+      email = "user#{contribuicao.usuario.id}@sandbox.pagseguro.com.br"
     else
       email = contribuicao.usuario.email
     end
