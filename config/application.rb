@@ -33,6 +33,8 @@ module Convinet
     Rails.application.routes.default_url_options[:host] = Rails.configuration.convinet['host']
     Rails.application.routes.default_url_options[:protocol] = Rails.configuration.convinet['protocol']
 
+    config.action_mailer.delivery_method = :sparkpost
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading

@@ -1,13 +1,14 @@
 production:
   titulo: <%= ENV.fetch("CONVINET_TITULO") { "CONVINET" } %>  
   prefixo_plano_pagseguro: <%= ENV.fetch("CONVINET_PREF_PLAN_PAG") { "PLAN_" } %>
-  pagseguro_email: <%= ENV.fetch("PAGSEGURO_EMAIL")%>
-  pagseguro_token: <%= ENV.fetch("PAGSEGURO_TOKEN")%>
+  pagseguro_email: <%= ENV.fetch("PAGSEGURO_EMAIL") { "" }%>
+  pagseguro_token: <%= ENV.fetch("PAGSEGURO_TOKEN") { "" }%>
   pagseguro_environment: production
   pagseguro_redirect: <%= ENV.fetch("PAGSEGURO_REDIRECT") { "" }%>
   email_notificacoes: <%= ENV.fetch("EMAIL_NOTIFICACOES") { "" }%>
   host: <%= ENV.fetch("HOST") { "" }%>
   protocol: <%= ENV.fetch("PROTOCOL") { "https" }%>
+  sparkpost_api_key: <%= ENV.fetch("SPARKPOST_API_KEY") { "https" }%>
 development:
   titulo: CONVINET
   prefixo_plano_pagseguro: OMF_
@@ -15,6 +16,7 @@ development:
   pagseguro_token: 1A2B3C4D5E6F7G8H9I
   pagseguro_environment: sandbox
   pagseguro_redirect: http://test.localdomain.com
-  email_notificacoes: teste@localdomain.com
+  email_notificacoes: CONVINET <teste@localdomain.com>
   host: localhost:3000
   protocol: http
+  sparkpost_api_key: 1A2B3C4D5E6F7G8H9I

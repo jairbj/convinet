@@ -39,6 +39,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # Gems adicionais
 gem 'cpf_cnpj'
 gem 'rails-i18n'
+gem 'sparkpost_rails'
 gem 'slim'
 
 # Autenticação
