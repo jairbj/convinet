@@ -30,6 +30,9 @@ module Convinet
 
     config.time_zone = 'Brasilia'
 
+    Rails.application.routes.default_url_options[:host] = Rails.configuration.convinet['host']
+    Rails.application.routes.default_url_options[:protocol] = Rails.configuration.convinet['protocol']
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading

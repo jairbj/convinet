@@ -20,9 +20,12 @@
                     td.border-right
                       h4
                         |Valor mensal
-                    td
+                    td.border-right
                       h4
                         |Status
+                    td
+                      h4
+                        |Data de Início
                 tbody
                   - @contribuicoes.each do |c|
                     tr
@@ -31,9 +34,11 @@
                           |R$
                           =< c.plano.valor.to_i
                           |.00
-                      td
+                      td.border-right
                         = link_to c
                           = c.status.to_s.capitalize
+                      td
+                        = c.created_at                          
           - else            
             .text-center            
               h3

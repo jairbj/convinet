@@ -40,14 +40,14 @@
               .input-group-prepend
                 span.input-group-text
                   i.material-icons
-                    | lock_outline              
+                    | lock_outline
               = f.password_field :password, autocomplete: "off", placeholder: "Senha...", class: "form-control"
             .input-group
               .input-group-prepend
                 span.input-group-text
                   i.material-icons
                     | lock_outline              
-              = f.password_field :password_confirmation, autocomplete: "off", placeholder: "Confirmar Senha...", class: "form-control"         
+              = f.password_field :password_confirmation, autocomplete: "off", placeholder: "Confirmar Senha...", class: "form-control"
           .container
             .text-center
               = f.submit t('.sign_up'), class: "btn btn btn-primary btn-round"

@@ -4,9 +4,17 @@ production:
   pagseguro_email: <%= ENV.fetch("PAGSEGURO_EMAIL")%>
   pagseguro_token: <%= ENV.fetch("PAGSEGURO_TOKEN")%>
   pagseguro_environment: production
+  pagseguro_redirect: <%= ENV.fetch("PAGSEGURO_REDIRECT") { "" }%>
+  email_notificacoes: <%= ENV.fetch("EMAIL_NOTIFICACOES") { "" }%>
+  host: <%= ENV.fetch("HOST") { "" }%>
+  protocol: <%= ENV.fetch("PROTOCOL") { "https" }%>
 development:
   titulo: CONVINET
   prefixo_plano_pagseguro: OMF_
   pagseguro_email: email@pagseguro.com.br
-  pagseguro_token: 12345678900
+  pagseguro_token: 1A2B3C4D5E6F7G8H9I
   pagseguro_environment: sandbox
+  pagseguro_redirect: http://test.localdomain.com
+  email_notificacoes: teste@localdomain.com
+  host: localhost:3000
+  protocol: http
