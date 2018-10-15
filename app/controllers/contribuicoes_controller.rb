@@ -130,14 +130,14 @@ class ContribuicoesController < ApplicationController
 
   def checa_telefone
     unless current_usuario.telefone
-      flash[:info] = 'Antes de poder fazer contribuições é necessário cadastrar seu telefone.'
+      flash[:info] = 'Antes de contribuir é necessário cadastrar seu telefone.'
       redirect_to :new_telefone      
     end
   end
 
   def checa_endereco
     unless current_usuario.endereco
-      flash[:info] = 'Antes de poder fazer contribuições é necessário cadastrar seu endereço.'
+      flash[:info] = 'Antes de contribuir é necessário cadastrar seu endereço.'
       redirect_to :new_endereco      
     end
   end

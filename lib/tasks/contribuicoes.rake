@@ -32,7 +32,8 @@ namespace :contribuicoes do
 
     while report.next_page?      
       report.next_page!
-      report.subscriptions.each do |s|        
+      report.subscriptions.each do |s|
+        next unless s.name.start_with? Rails.configuration.convinet['prefixo_plano_pagseguro']
         unless contribuicao = Contribuicao.find_by(codigo: s.code)
           if plano = Plano.find_by(nome: s.name)
             # Pega os dados da contribuição            
@@ -41,6 +42,7 @@ namespace :contribuicoes do
             rescue
               next
             end
+
             if PagSeguro.environment == :sandbox
               usuario = Usuario.find_by(id: s_data.sender.email.scan(/user(.*?)\@.*/)[0][0])              
             else

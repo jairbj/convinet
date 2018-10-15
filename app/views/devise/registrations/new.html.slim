@@ -1,3 +1,6 @@
+== content_for(:page_javascripts)
+  = javascript_include_tag  'cadastro-bundle'
+
 .container  
   .row
     .col-lg-7.col-md-6.ml-auto.mr-auto
@@ -35,7 +38,7 @@
                 span.input-group-text
                   i.material-icons
                     | calendar_today
-              = f.text_field :nascimento, autocomplete: "off", placeholder: "Data de nascimento (DD/MM/AAAA)...", maxlength: 10, class: "form-control"
+              = f.text_field :nascimento, autocomplete: "off", placeholder: "Data de nascimento (DD/MM/AAAA)...", maxlength: 10, class: "form-control", "data-inputmask" => "'mask': '99/99/9999', 'showMaskOnHover': false"
             .input-group
               .input-group-prepend
                 span.input-group-text
