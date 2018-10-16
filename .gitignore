@@ -27,3 +27,6 @@
 /config/master.key
 
 /config/convinet.yml
+
+# For simulating running rails in production mode.
+/rails_prod.sh

@@ -1,6 +1,3 @@
-//= require 'jquery.inputmask.bundle'
+//= require jquery.mask
 
-$(document).ready(function(){
-  $(" :input").inputmask();  
-  //Inputmask().mask(document.querySelectorAll("input"));
-});
+$.jMaskGlobals.watchDataMask = true;

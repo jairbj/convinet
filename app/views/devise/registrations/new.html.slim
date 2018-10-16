@@ -38,7 +38,7 @@
                 span.input-group-text
                   i.material-icons
                     | calendar_today
-              = f.text_field :nascimento, autocomplete: "off", placeholder: "Data de nascimento (DD/MM/AAAA)...", maxlength: 10, class: "form-control", "data-inputmask" => "'mask': '99/99/9999', 'showMaskOnHover': false"
+              = f.text_field :nascimento, autocomplete: "off", placeholder: "Data de nascimento (DD/MM/AAAA)...", maxlength: 10, class: "form-control", 'data-mask': '99/99/9999'
             .input-group
               .input-group-prepend
                 span.input-group-text

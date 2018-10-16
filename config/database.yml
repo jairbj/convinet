@@ -50,5 +50,3 @@ test:
 production:
   <<: *default
   database: convinet_production
-  username: convinet
-  password: <%= ENV['CONVINET_DATABASE_PASSWORD'] %>
