@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_10_002516) do
+ActiveRecord::Schema.define(version: 2018_10_16_170548) do
 
   create_table "contribuicoes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "usuario_id", null: false
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 2018_10_10_002516) do
   create_table "planos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "nome", default: "", null: false
     t.string "identificador", default: "", null: false
-    t.decimal "valor", precision: 4, scale: 2, null: false
+    t.decimal "valor", precision: 6, scale: 2, null: false
     t.string "codigo", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
