@@ -37,6 +37,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 # Gems adicionais
+gem 'activeadmin'
 gem 'cpf_cnpj'
 gem 'rails-i18n'
 gem 'sparkpost_rails'

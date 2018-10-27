@@ -71,4 +71,9 @@ ActiveSupport::Inflector.inflections do |inflect|
   # Compatibilidade com a gem TIDDLE
   inflect.irregular 'authenticationtoken', 'authenticationtokens'
   inflect.irregular 'authentication_token', 'authentication_tokens'
+
+  # Compatibilidade com a gem Activeadmin
+  inflect.irregular 'user',       'users'
+  inflect.irregular 'adminuser',  'adminusers'
+  inflect.irregular 'admin_user', 'admin_users'
 end

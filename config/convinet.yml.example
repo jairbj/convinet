@@ -11,7 +11,7 @@ production:
   sparkpost_api_key: <%= ENV.fetch("SPARKPOST_API_KEY") { "https" }%>
 development:
   titulo: CONVINET
-  prefixo_plano_pagseguro: OMF_
+  prefixo_plano_pagseguro: CONVINET_
   pagseguro_email: email@pagseguro.com.br
   pagseguro_token: 1A2B3C4D5E6F7G8H9I
   pagseguro_environment: sandbox
