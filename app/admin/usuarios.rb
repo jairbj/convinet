@@ -75,6 +75,21 @@ ActiveAdmin.register Usuario do
         row :cep
       end
     end
+
+    panel 'Contribuicões' do
+      table_for usuario.contribuicoes do        
+        column 'Valor mensal' do |c|
+          "R$ #{c.plano.valor.to_i},00"
+        end
+        column :status
+        column 'Data de Início' do |c|
+          c.created_at
+        end
+        column 'ID no PagSeguro' do |c|
+          c.codigo
+        end
+      end
+    end
     active_admin_comments
   end
 
