@@ -2,6 +2,9 @@ class Usuario < ApplicationRecord
   has_one :endereco
   has_one :telefone
   has_many :contribuicoes
+
+  accepts_nested_attributes_for :telefone
+  accepts_nested_attributes_for :endereco
   
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -26,4 +29,8 @@ class Usuario < ApplicationRecord
   validates_numericality_of :cpf
   validates :cpf, cpf_valido: true
   validates_uniqueness_of :cpf
+
+  def cpf_formatado
+    CPF.new(self.cpf).formatted
+  end
 end
