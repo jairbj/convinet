@@ -39,9 +39,6 @@ class ContribuicoesController < ApplicationController
 
     @contribuicao.atualizar_status(@subscription.status)    
     @contribuicao.save
-
-    # Obtem os pagamentos
-    @pagamentos = obtem_pagamentos(@contribuicao)
   end
 
   def create
@@ -142,27 +139,6 @@ class ContribuicoesController < ApplicationController
     end
   end
 
-  def obtem_pagamentos(c)
-    options = { credentials: PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)}
-    report = PagSeguro::SubscriptionSearchPaymentOrders.new(c.codigo, '', options)
-
-    unless report.valid?
-      puts "PAGSEGURO: Erro recuperar contribuicao"
-      puts report.errors.join("\n")
-      puts options
-      return nil
-    end
-
-    pagamentos = Array.new
-    while report.next_page?
-      report.next_page!
-      
-      report.payment_orders.each do |p|
-        pagamentos << p
-      end
-    end
-    return pagamentos
-  end
 
   def recupera_contribuicao(usuario, aguarda = false)
     sleep 5 if aguarda

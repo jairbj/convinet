@@ -28,6 +28,28 @@ class Contribuicao < ApplicationRecord
     when 'SUSPENDED'
       :suspenso      
     end
-
   end
+
+  def pagamentos
+    c = self
+    options = { credentials: PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)}
+    report = PagSeguro::SubscriptionSearchPaymentOrders.new(c.codigo, '', options)
+
+    unless report.valid?
+      puts "PAGSEGURO: Erro recuperar contribuicao"
+      puts report.errors.join("\n")
+      puts options
+      return nil
+    end
+
+    pagamentos = Array.new
+    while report.next_page?
+      report.next_page!
+      
+      report.payment_orders.each do |p|
+        pagamentos << p
+      end
+    end
+    return pagamentos
+  end  
 end

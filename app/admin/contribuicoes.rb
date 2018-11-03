@@ -38,5 +38,13 @@ ActiveAdmin.register Contribuicao do
       row('Data de Início') { contribuicao.created_at.to_date}
       row :codigo
     end
+
+    panel 'Pagamentos' do
+      table_for contribuicao.pagamentos do
+        column('Data do Pagamento') {|p| p.scheduling_date.to_date}
+        column('Status') {|p| status_pagamento_texto(p.status)}
+        column('Código do Pagamento no PagSeguro') {|p| p.code}
+      end
+    end
   end
 end

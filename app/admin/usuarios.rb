@@ -79,15 +79,11 @@ ActiveAdmin.register Usuario do
     panel 'Contribuicões' do
       table_for usuario.contribuicoes do        
         column 'Valor mensal' do |c|
-          "R$ #{c.plano.valor.to_i},00"
+          link_to("R$ #{c.plano.valor.to_i},00", admin_contribuicao_path(c.id))
         end
-        column :status
-        column 'Data de Início' do |c|
-          c.created_at
-        end
-        column 'ID no PagSeguro' do |c|
-          c.codigo
-        end
+        column('Status') {|c| c.status.capitalize}
+        column('Data de Início') {|c| c.created_at}        
+        column('ID no PagSeguro') {|c| c.codigo}        
       end
     end
     active_admin_comments
