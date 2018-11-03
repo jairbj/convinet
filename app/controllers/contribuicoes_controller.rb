@@ -31,7 +31,7 @@ class ContribuicoesController < ApplicationController
 
     if @subscription.errors.any?
       flash[:danger] = 'Erro ao conectar ao PagSeguro. Por favor tente novamente. COD: #06'
-      puts 'PAGSEGURO -> ERRO CRIAR CONTRIBUIÇÃO'
+      puts 'PAGSEGURO -> ERRO BUSCAR CONTRIBUIÇÃO'
       puts @subscription.errors.join('\n')
       redirect_to contribuicoes_path
       return
