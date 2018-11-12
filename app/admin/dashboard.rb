@@ -5,8 +5,22 @@ ActiveAdmin.register_page "Dashboard" do
   content title: proc{ I18n.t("active_admin.dashboard") } do
     columns do
       column do
-        panel "Últimas contribuições (exceto canceladas)" do          
-          table_for Contribuicao.ativo.last(10) do
+        panel 'Valor total mensal de contribuições ativas' do
+          total = 0
+          Contribuicao.ativo.each do |c|
+            total += c.plano.valor.to_i
+          end
+
+          h2 "R$ #{total},00"
+        end
+      end
+      column do
+      end
+    end
+    columns do
+      column do
+        panel 'Últimas 20 contribuições (exceto canceladas)' do          
+          table_for Contribuicao.where.not(status: :cancelado).order('created_at desc').last(20) do
             column("Nome")  { |c| link_to(c.usuario.nome, admin_usuario_path(c.usuario))}
             column("Valor") { |c| link_to("R$ #{c.plano.valor.to_i},00", admin_contribuicao_path(c.id))}
             column("Status") { |c| c.status.to_s.capitalize}
@@ -15,8 +29,8 @@ ActiveAdmin.register_page "Dashboard" do
         end
       end
       column do
-        panel "Últimas contribuições canceladas" do
-          table_for Contribuicao.cancelado.last(10) do
+        panel 'Últimas 20 contribuições canceladas' do
+          table_for Contribuicao.cancelado.order('created_at desc').last(20) do
             column("Nome")  { |c| link_to(c.usuario.nome, admin_usuario_path(c.usuario))}
             column("Valor") { |c| "R$ #{c.plano.valor.to_i},00"}
             column("Data de Início") { |c| c.created_at.to_date}
