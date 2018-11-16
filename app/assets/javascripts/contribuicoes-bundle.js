@@ -105,3 +105,9 @@ function naoNumerico(value) {
     var n = Number(value);
     return n !== n;
 };
+
+function pagamentoAlternativo() {
+  $('.pagamento-normal').slideUp();
+  $('#texto-pagseguro-alternativo').slideUp();
+  $('#bt-pagseguro-alternativo').slideDown()
+}
