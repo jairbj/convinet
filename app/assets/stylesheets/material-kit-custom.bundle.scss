@@ -23,6 +23,10 @@
   background: none;
 }
 
-.navbar-brand a {
+.navbar-transparent .navbar-brand a {
   color: white;
+}
+
+.navbar-brand a {
+  color: $navbar-color;  
 }
