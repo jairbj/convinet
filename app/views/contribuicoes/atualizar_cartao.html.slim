@@ -1,0 +1,62 @@
+== content_for(:page_javascripts)
+  - if PagSeguro.environment == :sandbox
+    = javascript_include_tag('https://stc.sandbox.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js')
+  - else
+    = javascript_include_tag('https://stc.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js')
+  = javascript_include_tag('contribuicoes-bundle')
+
+.container  
+  .row
+    .col-lg-6.col-md-6.ml-auto.mr-auto
+      .card
+        .card-header.card-header-primary.text-center
+          h4.card-title
+            | Atualizar cartão de crédito
+        .card-body
+          h3.text-center
+            |Valor mensal: R$
+            =< @contribuicao.plano.valor.to_i
+            |,00
+          p.description.text-center.margin-10
+            | Informe abaixo os dados do novo cartão de crédito
+            br
+            strong
+              |ATENÇÃO
+            br
+            |Você só poderá usar cartões de crédito vinculados ao seu CPF
+          .pagamento-normal
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.fa.fa-credit-card                      
+              = text_field :cartao, :nome, autofocus: true, autocomplete: "off", placeholder: "Nome como consta no cartão...", class: "form-control", maxlength: 50
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.fa.fa-credit-card                      
+              = text_field :cartao, :numero, autofocus: true, autocomplete: "off", placeholder: "Número do cartão (sem espaços)...", class: "form-control", maxlength: 16
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.fa.fa-credit-card                                       
+              = text_field :cartao, :cvv, autofocus: true, autocomplete: "off", placeholder: "Código de segurança CVV...", class: "form-control", maxlength: 4
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.fa.fa-calendar
+              = text_field :cartao, :mes, autofocus: true, autocomplete: "off", placeholder: "Validade - Mês (MM)...", class: "form-control", maxlength: 2
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.fa.fa-calendar                                      
+              = text_field :cartao, :ano, autofocus: true, autocomplete: "off", placeholder: "Validade - Ano (AA)...", class: "form-control", maxlength: 2
+        .container.pagamento-normal
+          = form_for @contribuicao, url: update_cartao_path, method: :post, html: {id: 'new_contribuicao', class: 'form'} do |f|
+            = f.hidden_field :session, value: @session
+            = f.hidden_field :contribuicao, value: @contribuicao.id
+            = f.hidden_field :hash_cliente
+            = f.hidden_field :token_cartao
+            = f.hidden_field :nome_cartao
+          .text-center
+            button.btn.btn-primary.btn-round[onclick='processaContribuicao();' id='processar']
+              |Atualizar cartão de crédito

@@ -37,5 +37,8 @@
             br
             .container
               .text-center
+                = link_to atualizar_cartao_path(contribuicao: @contribuicao.id), class: 'btn btn-primary'
+                    |Atualizar cartão de crédito              
+              .text-center
                 = link_to @contribuicao, class: 'btn btn-primary', data: { confirm: 'Tem certeza que deseja cancelar sua contribuição?' }, method: :delete
                     |Cancelar Contribuição              

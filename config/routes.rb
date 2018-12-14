@@ -6,8 +6,9 @@ Rails.application.routes.draw do
   resources :planos, only: [:new, :create]
 
   get 'contribuicoes/new/:plano', to: 'contribuicoes#new', as: 'new_contribuicao'
-  get 'contribuicoes/verifica'
   resources :contribuicoes, only: [:index, :create, :show, :destroy]
+  get 'contribuicoes/atualizar_cartao/:contribuicao', to: 'contribuicoes#atualizar_cartao', as: 'atualizar_cartao'
+  post 'contribuicoes/atualizar_cartao', to: 'contribuicoes#update_cartao', as: 'update_cartao'
 
   resources :enderecos, only: [:new, :create, :edit, :update]
 

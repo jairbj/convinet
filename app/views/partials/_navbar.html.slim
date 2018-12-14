@@ -2,7 +2,8 @@ nav#sectionsNav.navbar.navbar-transparent.navbar-color-on-scroll.fixed-top.navba
   .container
     .navbar-translate
       .navbar-brand
-        = Rails.configuration.convinet['titulo']
+        = link_to root_path
+          = Rails.configuration.convinet['titulo']
       - if usuario_signed_in?
         button.navbar-toggler[type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation"]
           span.sr-only

@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/jairbj/pagseguro-ruby.git
-  revision: fc8d5e4b31d491602f8f408c0768179c88e5ec89
+  revision: 10ab4e3f8517d3849a3376b89151da642d058695
   specs:
     pagseguro-oficial (2.6.1)
       aitch (~> 0.2)

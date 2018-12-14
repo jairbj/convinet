@@ -117,6 +117,38 @@ class ContribuicoesController < ApplicationController
     redirect_to @contribuicao
   end
 
+  def atualizar_cartao
+    @contribuicao = current_usuario.contribuicoes.find params[:contribuicao]
+    @session = PagSeguro::Session.create.id
+  end
+
+  def update_cartao
+    @contribuicao = current_usuario.contribuicoes.find(params[:contribuicao][:contribuicao])    
+    @contribuicao.hash_cliente = params[:contribuicao][:hash_cliente]
+    @contribuicao.token_cartao = params[:contribuicao][:token_cartao]
+    @contribuicao.nome_cartao = params[:contribuicao][:nome_cartao]
+
+    changePayment = gera_subscription_change_payment(@contribuicao)
+    changePayment.credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
+    begin
+      changePayment.update
+    rescue
+      flash[:danger] = 'Erro ao processar atualização do cartão de crédito junto ao PagSeguro, por favor tente novamente.'
+      redirect_to atualizar_cartao_path(contribuicao: @contribuicao.id)
+      return
+    end
+    
+    if changePayment.errors.any? 
+      flash[:error] = 'Erro ao atualizar cartão de crédito junto ao PagSeguro, por favor tente novamente.'
+      redirect_to atualizar_cartao_path(contribuicao: @contribuicao.id)
+      puts 'PAGSEGURO -> ERRO ATUALIZAR CARTÃO'
+      puts changePayment.errors.join('\n')
+    else
+      flash[:success] = 'Cartão de crédito atualizado com sucesso.'
+      redirect_to @contribuicao      
+    end
+  end
+
   private
 
   def contribuicao_params
@@ -191,6 +223,66 @@ class ContribuicoesController < ApplicationController
 
     return false unless contribuicoes_recuperadas
     contribuicoes_recuperadas              
+  end
+
+  def gera_subscription_change_payment(contribuicao)
+    if PagSeguro.environment == :sandbox
+      email = "user#{contribuicao.usuario.id}@sandbox.pagseguro.com.br"
+    else
+      email = contribuicao.usuario.email
+    end
+
+    PagSeguro::SubscriptionChangePayment.new(
+      subscription_code: contribuicao.codigo,
+      sender: {
+        name: contribuicao.usuario.nome,
+        email: email,
+        hash: contribuicao.hash_cliente,
+        phone: {
+          area_code: contribuicao.usuario.telefone.ddd,
+          number: contribuicao.usuario.telefone.numero
+        },
+        document: { 
+          type: 'CPF', 
+          value: contribuicao.usuario.cpf 
+        },
+        address: {
+          street: contribuicao.usuario.endereco.rua,
+          number: contribuicao.usuario.endereco.numero,
+          complement: contribuicao.usuario.endereco.complemento,
+          district: contribuicao.usuario.endereco.bairro,
+          city: contribuicao.usuario.endereco.cidade,
+          state: contribuicao.usuario.endereco.estado,
+          country: 'BRA',
+          postal_code: contribuicao.usuario.endereco.cep
+        }
+      },
+      subscription_payment_method: {
+        token: contribuicao.token_cartao,
+        holder: {
+          name: contribuicao.nome_cartao,
+          birth_date: contribuicao.usuario.nascimento,
+          phone: {
+            area_code: contribuicao.usuario.telefone.ddd,
+            number: contribuicao.usuario.telefone.numero
+          },
+          document: { 
+            type: 'CPF', 
+            value: contribuicao.usuario.cpf 
+          },          
+          billing_address: {
+            street: contribuicao.usuario.endereco.rua,
+            number: contribuicao.usuario.endereco.numero,
+            complement: contribuicao.usuario.endereco.complemento,
+            district: contribuicao.usuario.endereco.bairro,
+            city: contribuicao.usuario.endereco.cidade,
+            state: contribuicao.usuario.endereco.estado,
+            country: 'BRA',
+            postal_code: contribuicao.usuario.endereco.cep
+          },
+        }
+      }
+    )
   end
 
   def gera_subscription(contribuicao)

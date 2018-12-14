@@ -50,6 +50,7 @@ gem 'devise-i18n'
 # PagSeguro
 gem 'pagseguro-oficial', '~> 2.6.1', :git => 'https://github.com/jairbj/pagseguro-ruby.git'
 
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

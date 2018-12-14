@@ -9,6 +9,8 @@ module PagSeguroHelper
       return 'Pago'
     when :not_paid
       return 'Não pago'
+    when :suspended
+      return 'Suspenso'
     else
       return status
     end
