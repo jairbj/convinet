@@ -49,7 +49,31 @@ class Contribuicao < ApplicationRecord
       report.payment_orders.each do |p|
         pagamentos << p
       end
-    end
+    end    
+    pagamentos.sort_by! &:last_event_date
     return pagamentos
-  end  
+  end
+
+  def payment_retry 
+    c = self
+
+    p = pagamentos    
+    return false unless p    
+    
+    p_retry = PagSeguro::SubscriptionRetry.new(
+      subscription_code: c.codigo,
+      payment_order_code: p.last.code
+    )
+
+    p_retry.credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
+    p_retry.save
+
+    if p_retry.errors.any?
+      puts 'PAGSEGURO -> ERRO RETENTATIVA DE PAGAMENTO'
+      puts p_retry.errors.join('\n')
+      return false
+    else
+      return true
+    end
+  end
 end
