@@ -30,3 +30,6 @@
 
 # For simulating running rails in production mode.
 /rails_prod.sh
+
+# Mysql temp dir for docker-compose
+/.mysql
