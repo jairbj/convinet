@@ -11,13 +11,23 @@ ActiveAdmin.register Contribuicao do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
-# 
+
   actions :index, :show
 
-  filter  :usuario, collection: -> {Usuario.all.map {|u| [u.nome, u.id]}} 
-  filter  :status, as: :select, collection: Contribuicao.status  
-  filter  :plano, label: 'Valor mensal', as: :select, 
-          collection: -> {Plano.all.order('valor asc').map {|p|  ["R$ #{p.valor.to_i},00", p.id]}}
+  filter  :usuario, collection: -> {Usuario.all.map { |u| [u.nome, u.id]}}
+  filter  :status, as: :select, collection: Contribuicao.status
+  filter  :plano, label: 'Valor mensal', as: :select,
+          collection: -> { Plano.all.order('valor asc').map { |p|  ["R$ #{p.valor.to_i},00", p.id]}}
+
+
+  member_action :payment_cancel, method: :post do
+    if resource.payment_cancel
+      flash[:notice] = 'Contribuição cancelada com sucesso.'
+    else
+      flash[:error] = 'Erro ao solicitar cancelamento de contribuição. Tente novamente.'
+    end
+    redirect_to admin_contribuicao_path(id: resource.id)
+  end
 
   member_action :payment_retry, method: :post do
     if resource.payment_retry
@@ -30,7 +40,7 @@ ActiveAdmin.register Contribuicao do
 
   index do
     selectable_column
-    id_column    
+    id_column
     column('Usuário') { |c| c.usuario.nome }
     column('Valor mensal') { |c| "R$ #{c.plano.valor.to_i},00"}
     column('Status') { |c| c.status.to_s.capitalize}
@@ -39,6 +49,8 @@ ActiveAdmin.register Contribuicao do
   end
 
   show do
+    resource.check_status
+
     attributes_table do
       row :id
       row('Usuario') { |c| link_to("#{c.usuario.nome} - #{c.usuario.email}", admin_usuario_path(c.usuario))}
@@ -52,19 +64,24 @@ ActiveAdmin.register Contribuicao do
       pagamentos = contribuicao.pagamentos
 
       table_for pagamentos do
-        column('Data do Pagamento') {|p| p.scheduling_date.to_date}
-        column('Status') {|p| status_pagamento_texto(p.status)}
+        column('Data do Pagamento') { |p| p.scheduling_date.to_date}
+        column('Status') { |p| status_pagamento_texto(p.status)}
         column('Código do Pagamento no PagSeguro') {|p| p.code}
       end
 
       ultimo_evento = pagamentos.last
       unless contribuicao.cancelado?
+        h4 link_to('Cancelar Contribuição',
+                   payment_cancel_admin_contribuicao_path,
+                   method: :post,
+                   data: {confirm: 'Tem certeza que deseja cancelar essa contribuição?'})
+
         if ultimo_evento.status == :not_paid
-          h4 link_to('Retentativa de Pagamento', payment_retry_admin_contribuicao_path, method: :post)
+          h4 link_to('Retentativa de Pagamento',
+                     payment_retry_admin_contribuicao_path,
+                     method: :post)
         end
-      end      
+      end
     end
-
-
   end
 end

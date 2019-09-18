@@ -6,14 +6,35 @@ class Contribuicao < ApplicationRecord
 
   attr_accessor :hash_cliente
   #validates_presence_of :hash_cliente
-  
+
   attr_accessor :token_cartao
   #validates_presence_of :token_cartao
 
   attr_accessor :nome_cartao
   #validates_presence_of :nome_cartao 
 
-  def atualizar_status(novo_status)          
+  def check_status
+    # Atualiza o status da contribuição pelo status do pagseguro
+    credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
+    subscription = PagSeguro::Subscription.find_by_code(self.codigo, credentials: credentials)
+
+    unless subscription
+      puts 'PAGSEGURO -> ERRO BUSCAR CONTRIBUIÇÃO'
+      puts subscription.to_yaml
+      return false
+    end
+
+    if subscription.errors.any?
+      puts 'PAGSEGURO -> ERRO BUSCAR CONTRIBUIÇÃO'
+      puts subscription.errors.join('\n')
+      return false
+    end
+
+    self.atualizar_status(subscription.status)
+    self.save
+  end
+
+  def atualizar_status(novo_status)
     self.status = case novo_status.upcase
     when 'PENDING'
       :pendente
@@ -26,7 +47,7 @@ class Contribuicao < ApplicationRecord
     when 'CANCELLED_BY_RECEIVER'
       :cancelado
     when 'SUSPENDED'
-      :suspenso      
+      :suspenso
     end
   end
 
@@ -45,21 +66,43 @@ class Contribuicao < ApplicationRecord
     pagamentos = Array.new
     while report.next_page?
       report.next_page!
-      
+
       report.payment_orders.each do |p|
         pagamentos << p
       end
-    end    
+    end
     pagamentos.sort_by! &:last_event_date
     return pagamentos
+  end
+
+  def payment_cancel
+    c = self
+
+    cancel = PagSeguro::SubscriptionCanceller.new(subscription_code: c.codigo)
+    cancel.credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
+
+    begin
+      cancel.save
+    rescue
+      puts 'PAGSEGURO -> ERRO CANCELAR CONTRIBUIÇÃO - CANCEL.SAVE'
+      return false
+    end
+
+    if cancel.errors.any?
+      puts 'PAGSEGURO -> ERRO CANCELAR CONTRIBUIÇÃO'
+      puts cancel.errors.join('\n')
+      return false
+    else
+      return true
+    end
   end
 
   def payment_retry 
     c = self
 
-    p = pagamentos    
-    return false unless p    
-    
+    p = pagamentos
+    return false unless p
+
     p_retry = PagSeguro::SubscriptionRetry.new(
       subscription_code: c.codigo,
       payment_order_code: p.last.code

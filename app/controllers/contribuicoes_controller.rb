@@ -3,7 +3,7 @@ class ContribuicoesController < ApplicationController
   before_action :checa_telefone
   before_action :checa_endereco
 
-  def index    
+  def index
     @contribuicoes = current_usuario.contribuicoes.order 'id desc'
   end
 
@@ -16,29 +16,12 @@ class ContribuicoesController < ApplicationController
 
   def show
     @contribuicao = current_usuario.contribuicoes.find(params[:id])
-    
-    # Atualiza o status da contribuição
-    credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
-    @subscription = PagSeguro::Subscription.find_by_code(@contribuicao.codigo, credentials: credentials)
 
-    unless @subscription
+    unless @contribuicao.check_status
       flash[:danger] = 'Erro ao conectar ao PagSeguro. Por favor tente novamente. COD: #05'
-      puts 'PAGSEGURO -> ERRO BUSCAR CONTRIBUIÇÃO'
-      puts subscription.to_yaml
       redirect_to contribuicoes_path
       return
     end
-
-    if @subscription.errors.any?
-      flash[:danger] = 'Erro ao conectar ao PagSeguro. Por favor tente novamente. COD: #06'
-      puts 'PAGSEGURO -> ERRO BUSCAR CONTRIBUIÇÃO'
-      puts @subscription.errors.join('\n')
-      redirect_to contribuicoes_path
-      return
-    end
-
-    @contribuicao.atualizar_status(@subscription.status)    
-    @contribuicao.save
   end
 
   def create
@@ -55,7 +38,7 @@ class ContribuicoesController < ApplicationController
 
     subscription.credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
     begin
-      subscription.create      
+      subscription.create
     rescue
       if recupera_contribuicao(@contribuicao.usuario, true)
         flash[:info] = 'Houve um erro na comunicação com o PagSeguro. 
@@ -84,8 +67,8 @@ class ContribuicoesController < ApplicationController
     end
 
     @contribuicao.codigo = subscription.code
-    @contribuicao.save  
-    
+    @contribuicao.save
+
     flash[:success] = 'Contribuição cadastrada com sucesso.'
 
     redirect_to root_path
@@ -93,25 +76,11 @@ class ContribuicoesController < ApplicationController
 
   def destroy
     @contribuicao = current_usuario.contribuicoes.find(params[:id])
-    
-    cancel = PagSeguro::SubscriptionCanceller.new(subscription_code: @contribuicao.codigo)
 
-    cancel.credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
-    
-    begin
-      cancel.save
-    rescue
-      flash[:error] = 'Houve um erro ao efetuar o cancelamento da sua contribuição. Por favor tente novamente'
-      redirect_to @contribuicao
-      return
-    end
-
-    if cancel.errors.any?
-      flash[:danger] = 'Houve um erro ao efetuar o cancelamento da sua contribuição. Por favor tente novamente'
-      puts 'PAGSEGURO -> ERRO CANCELAR CONTRIBUIÇÃO'
-      puts cancel.errors.join('\n')
+    if @contribuicao.payment_cancel
+      flash[:success] = 'Contribuição cancelada com sucesso.'
     else
-      flash[:success] = 'Contribuição cancelada com sucesso.'      
+      flash[:error] = 'Houve um erro ao efetuar o cancelamento da sua contribuição. Por favor tente novamente'
     end
 
     redirect_to @contribuicao
@@ -137,7 +106,7 @@ class ContribuicoesController < ApplicationController
       redirect_to atualizar_cartao_path(contribuicao: @contribuicao.id)
       return
     end
-    
+
     if changePayment.errors.any? 
       flash[:error] = 'Erro ao atualizar cartão de crédito junto ao PagSeguro, por favor tente novamente.'
       redirect_to atualizar_cartao_path(contribuicao: @contribuicao.id)
@@ -145,7 +114,7 @@ class ContribuicoesController < ApplicationController
       puts changePayment.errors.join('\n')
     else
       flash[:success] = 'Cartão de crédito atualizado com sucesso.'
-      redirect_to @contribuicao      
+      redirect_to @contribuicao
     end
   end
 
@@ -160,14 +129,14 @@ class ContribuicoesController < ApplicationController
   def checa_telefone
     unless current_usuario.telefone
       flash[:info] = 'Antes de contribuir é necessário cadastrar seu telefone.'
-      redirect_to :new_telefone      
+      redirect_to :new_telefone
     end
   end
 
   def checa_endereco
     unless current_usuario.endereco
       flash[:info] = 'Antes de contribuir é necessário cadastrar seu endereço.'
-      redirect_to :new_endereco      
+      redirect_to :new_endereco
     end
   end
 
@@ -182,7 +151,7 @@ class ContribuicoesController < ApplicationController
     else
       email = usuario.email
     end
-    
+
     options = {
       credentials: credentials,      
       starts_at: Time.now.in_time_zone('Brasilia') - 15.minutes,
@@ -202,13 +171,13 @@ class ContribuicoesController < ApplicationController
       puts options
       return false
     end
-      
+
     contribuicoes_recuperadas = 0
-      
-    while report.next_page?      
+
+    while report.next_page?
       report.next_page!
       report.subscriptions.each do |s|
-        unless usuario.contribuicoes.find_by codigo: s.code          
+        unless usuario.contribuicoes.find_by codigo: s.code
           plano = Plano.find_by nome: s.name
           if plano
             c = usuario.contribuicoes.new
@@ -218,11 +187,11 @@ class ContribuicoesController < ApplicationController
             contribuicoes_recuperadas += 1 if c.save
           end
         end
-      end    
+      end
     end
 
     return false unless contribuicoes_recuperadas
-    contribuicoes_recuperadas              
+    contribuicoes_recuperadas
   end
 
   def gera_subscription_change_payment(contribuicao)
@@ -266,10 +235,10 @@ class ContribuicoesController < ApplicationController
             area_code: contribuicao.usuario.telefone.ddd,
             number: contribuicao.usuario.telefone.numero
           },
-          document: { 
-            type: 'CPF', 
-            value: contribuicao.usuario.cpf 
-          },          
+          document: {
+            type: 'CPF',
+            value: contribuicao.usuario.cpf
+          },
           billing_address: {
             street: contribuicao.usuario.endereco.rua,
             number: contribuicao.usuario.endereco.numero,
@@ -292,7 +261,7 @@ class ContribuicoesController < ApplicationController
       email = contribuicao.usuario.email
     end
     PagSeguro::Subscription.new(
-      plan: contribuicao.plano.codigo,      
+      plan: contribuicao.plano.codigo,
       sender: {
         name: contribuicao.usuario.nome,
         email: email,
@@ -301,9 +270,9 @@ class ContribuicoesController < ApplicationController
           area_code: contribuicao.usuario.telefone.ddd,
           number: contribuicao.usuario.telefone.numero
         },
-        document: { 
-          type: 'CPF', 
-          value: contribuicao.usuario.cpf 
+        document: {
+          type: 'CPF',
+          value: contribuicao.usuario.cpf
         },
         address: {
           street: contribuicao.usuario.endereco.rua,
@@ -321,9 +290,9 @@ class ContribuicoesController < ApplicationController
         holder: {
           name: contribuicao.nome_cartao,
           birth_date: contribuicao.usuario.nascimento,
-          document: { 
-            type: 'CPF', 
-            value: contribuicao.usuario.cpf 
+          document: {
+            type: 'CPF',
+            value: contribuicao.usuario.cpf
           },
           billing_address: {
             street: contribuicao.usuario.endereco.rua,
