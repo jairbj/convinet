@@ -40,15 +40,15 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'activeadmin'
 gem 'cpf_cnpj'
 gem 'rails-i18n'
-gem 'sparkpost_rails'
 gem 'slim'
+gem 'sparkpost_rails'
 
 # Autenticação
 gem 'devise'
 gem 'devise-i18n'
 
 # PagSeguro
-gem 'pagseguro-oficial', '~> 2.6.1', :git => 'https://github.com/jairbj/pagseguro-ruby.git'
+gem 'pagseguro-oficial', '~> 2.6.1', git: 'https://github.com/jairbj/pagseguro-ruby.git'
 
 
 group :development, :test do
@@ -58,12 +58,12 @@ end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'web-console', '>= 3.3.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'rspec-rails'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
-  gem 'rspec-rails'
 end
 
 group :test do
