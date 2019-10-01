@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_24_005514) do
+ActiveRecord::Schema.define(version: 2019_09_28_143556) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -73,6 +73,20 @@ ActiveRecord::Schema.define(version: 2019_09_24_005514) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "pre_cadastros", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "codigo", limit: 6, null: false
+    t.integer "status", default: 0, null: false
+    t.bigint "usuario_id", null: false
+    t.bigint "plano_id"
+    t.integer "tipo", default: 0, null: false
+    t.decimal "valor", precision: 6, scale: 2, default: "0.0"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["codigo"], name: "index_pre_cadastros_on_codigo", unique: true
+    t.index ["plano_id"], name: "index_pre_cadastros_on_plano_id"
+    t.index ["usuario_id"], name: "index_pre_cadastros_on_usuario_id"
+  end
+
   create_table "telefones", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "usuario_id", null: false
     t.string "ddd", limit: 2, default: "", null: false
@@ -106,5 +120,7 @@ ActiveRecord::Schema.define(version: 2019_09_24_005514) do
   add_foreign_key "contribuicoes", "planos"
   add_foreign_key "contribuicoes", "usuarios"
   add_foreign_key "enderecos", "usuarios"
+  add_foreign_key "pre_cadastros", "planos"
+  add_foreign_key "pre_cadastros", "usuarios"
   add_foreign_key "telefones", "usuarios"
 end
