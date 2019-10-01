@@ -17,7 +17,7 @@ class PlanosController < ApplicationController
       @plano.identificador = Rails.configuration.convinet['prefixo_plano_pagseguro'] + @plano.valor.to_i.to_s
       @plano.nome = @plano.identificador
 
-      @plano.codigo = cria_plano_pagseguro(@plano)
+      @plano.codigo = @plano.criaPagSeguro
 
       if @plano.codigo
         @plano.save
@@ -29,35 +29,12 @@ class PlanosController < ApplicationController
     else
       flash_errors(@plano)
       render :new
-    end    
+    end
   end
 
   private
 
   def plano_params
     params.require(:plano).permit(:valor)
-  end
-
-  def cria_plano_pagseguro(plano)
-    p = PagSeguro::SubscriptionPlan.new(
-      charge: 'auto', 
-      reference: plano.identificador,
-      name: plano.nome,   
-      period: 'Monthly',      
-      amount: plano.valor.to_i,
-      redirect_url: Rails.configuration.convinet['pagseguro_redirect'],
-      review_url: Rails.configuration.convinet['pagseguro_redirect']
-    )
-
-    p.credentials = PagSeguro::AccountCredentials.new(PagSeguro.email, PagSeguro.token)
-    p.create
-
-    if p.errors.any?
-      puts 'ERRO PAGSEGURO =>'
-      puts p.errors.join("\n")
-      nil
-    else
-      p.code
-    end
   end
 end
