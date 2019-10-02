@@ -1,0 +1,37 @@
+.container  
+  .row
+    .col-lg-5.col-md-6.ml-auto.mr-auto
+      .card                
+        .card-header.card-header-primary.text-center
+          h4.card-title
+            | Pré-Cadastro
+        
+        .card-body
+          p.text-center
+            | Confira os dados abaixo antes de efetuar sua contribuição
+          h5
+            strong
+              |Nome:
+            =< @pre_cadastro.usuario.nome
+          h5
+            strong
+              |Tipo de contribuição:
+            =< @pre_cadastro.tipo.to_s
+          h5
+            strong
+              |Valor: R$
+            =< @pre_cadastro.valor.to_i
+            |,00         
+        .container
+          h4.text-center
+            strong
+              | Obs.: Na tela do PagSeguro utilize o mesmo e-mail utilizado no seu Pré-Cadastro.
+          .text-center            
+            | Clique no botão abaixo para efetuar sua contribuição
+          .text-center
+            '<!-- INICIO FORMULARIO BOTAO PAGSEGURO: NAO EDITE OS COMANDOS DAS LINHAS ABAIXO -->
+            form[action='https://pagseguro.uol.com.br/pre-approvals/request.html' method='post']
+              input[type='hidden' name='code' value="#{@pre_cadastro.plano.codigo}"]
+              input[type='hidden' name='iot' value='button']
+              input[type='image' src='https://stc.pagseguro.uol.com.br/public/img/botoes/assinaturas/209x48-assinar-roxo-assina.gif' name='submit' alt='Pague com PagSeguro - É rápido, grátis e seguro!' width='209' height='48']
+            '<!-- FINAL FORMULARIO BOTAO PAGSEGURO -->

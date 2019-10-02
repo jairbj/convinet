@@ -13,10 +13,12 @@ Rails.application.routes.draw do
   resources :enderecos, only: [:new, :create, :edit, :update]
 
   resources :telefones, only: [:new, :create, :edit, :update]
-  
+
+  post 'pre_cadastro', to: 'pre_cadastros#show', as: 'pre_cadastro'
+
   get 'paginas/home'
 
-  devise_scope :usuario do    
+  devise_scope :usuario do
     get     'login',      to: 'devise/sessions#new'
     get     'cadastro',   to: 'devise/registrations#new'
     get     'logout',     to: 'devise/sessions#destroy'

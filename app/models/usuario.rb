@@ -2,10 +2,15 @@ class Usuario < ApplicationRecord
   has_one :endereco
   has_one :telefone
   has_many :contribuicoes
+  has_many :pre_cadastros
+
+  def to_s
+    "#{nome} - #{email}"
+  end
 
   accepts_nested_attributes_for :telefone
   accepts_nested_attributes_for :endereco
-  
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -18,9 +23,9 @@ class Usuario < ApplicationRecord
   validates_presence_of :nascimento
   validates_length_of :nascimento, is: 10
   validates :nascimento, format: {with: /\A[0-9]{2}\/[0-9]{2}\/[0-9]{4}\z/, message: "formato inválido. Deve ser DD/MM/AAAA"}
-  
+
   # Email
-  validates_presence_of :email 
+  validates_presence_of :email
   validates :email, email_format: true
   validates_uniqueness_of :email
   # CPF

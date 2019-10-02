@@ -11,14 +11,18 @@ ActiveAdmin.register Usuario do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
-  actions :all, except: [:new, :destroy]
+  actions :all, except: [:destroy]
+
+  action_item :pre_cadastro, only: :show do
+    link_to 'Criar pré-cadastro', new_admin_pre_cadastro_path(pre_cadastro: {usuario_id: resource.id})
+  end
 
   permit_params :nome,
                 :email,
                 :cpf,
                 :nascimento,
                 telefone_attributes: [:id,
-                                      :ddd, 
+                                      :ddd,
                                       :numero],
                 endereco_attributes: [:id,
                                       :rua,
@@ -30,12 +34,12 @@ ActiveAdmin.register Usuario do
                                       :cep]
 
   filter :nome
-  filter :cpf  
+  filter :cpf
 
   index do
     selectable_column
     id_column
-    column :nome
+    column(:nome) { |c| link_to(c.nome, admin_usuario_path(c)) }
     column :email
     column 'CPF', :cpf_formatado
     actions
@@ -54,9 +58,9 @@ ActiveAdmin.register Usuario do
       end
       row 'Data de Cadastro' do
         usuario.created_at
-      end 
+      end
     end
-      
+
     panel 'Telefone' do
       attributes_table_for usuario.telefone do
         row :ddd
@@ -77,42 +81,62 @@ ActiveAdmin.register Usuario do
     end
 
     panel 'Contribuicões' do
-      table_for usuario.contribuicoes do        
+      table_for usuario.contribuicoes do
         column 'Valor mensal' do |c|
           link_to("R$ #{c.plano.valor.to_i},00", admin_contribuicao_path(c.id))
         end
         column('Status') {|c| c.status.capitalize}
-        column('Data de Início') {|c| c.created_at}        
-        column('ID no PagSeguro') {|c| c.codigo}        
+        column('Data de Início') {|c| c.created_at}
+        column('ID no PagSeguro') {|c| c.codigo}
       end
     end
     active_admin_comments
+  end
+
+  before_create do |u|
+    u.password = u.cpf
+    u.password_confirmation = u.cpf
   end
 
   form do |f|
     f.semantic_errors
     f.inputs 'Usuário' do
       input :nome
-      input :email
-      input :cpf 
-      input :nascimento, label: 'Data de Nascimento'     
+      input :email      
+      input :cpf, label: "CPF (somente números):"
+      input :nascimento, label: 'Data de Nascimento',
+                         start_year: Date.today.year - 100,
+                         end_year: Date.today.year
+
+      if f.object.new_record?
+
+        li do
+          strong 'ATENÇÃO: A senha do usuário será o número do CPF, sem pontos e sem hífen.'.html_safe
+        end
+
+        unless f.object.telefone
+          f.object.telefone = Telefone.new
+        end
+        unless f.object.endereco
+          f.object.endereco = Endereco.new
+        end
+      end
 
       f.has_many :telefone, allow_destroy: false, new_record: false do |t|
         t.input :ddd
         t.input :numero
       end
 
-      f.has_many :endereco, allow_destroy: false, new_record: false do |t|
-        t.input :rua
-        t.input :numero
-        t.input :complemento
-        t.input :bairro
-        t.input :cidade
-        t.input :estado
-        t.input :cep       
+      f.has_many :endereco, allow_destroy: false, new_record: false do |e|
+        e.input :rua
+        e.input :numero
+        e.input :complemento
+        e.input :bairro
+        e.input :cidade
+        e.input :estado
+        e.input :cep
       end
     end
     f.actions
   end
-
 end

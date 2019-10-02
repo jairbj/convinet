@@ -2,10 +2,10 @@
   .row
     .col-lg-5.col-md-6.ml-auto.mr-auto
       .card
-        = form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'form'}) do |f|        
-          .card-header.card-header-primary.text-center
-            h4.card-title
-              | Login                
+        .card-header.card-header-primary.text-center
+          h4.card-title
+            | Login                
+        = form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'form'}) do |f|
           p.description.text-center.margin-10
             | Faça o login para fazer, acompanhar, alterar ou cancelar sua contribuição.          
           .card-body                
@@ -32,5 +32,23 @@
               = f.submit t('.sign_in'), class: "btn btn btn-primary btn-round"
           .container.margin-10
             = render 'devise/shared/links'          
-            
-
+        hr
+        h5.text-center.margin-10
+          strong
+            | Se você fez seu pré-cadastro, informe o código aqui
+        = form_for(PreCadastro.new, url: pre_cadastro_path, method: :post, html: {class: 'form' }) do |f|
+          .card-body                
+            .input-group
+              .input-group-prepend
+                span.input-group-text
+                  i.material-icons
+                    | confirmation_number
+              = f.text_field :codigo, 
+                             autofocus: true, 
+                             autocomplete: :no, 
+                             placeholder: "Código do pré-cadastro", 
+                             class: "form-control text-uppercase",
+                             maxlength: 6
+          .container
+            .text-center
+              = f.submit "Continuar", class: "btn btn btn-primary btn-round"
