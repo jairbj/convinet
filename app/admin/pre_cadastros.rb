@@ -33,8 +33,7 @@ ActiveAdmin.register PreCadastro do
 
   action_item :cancelar,
               only: :show,
-              if: proc{ resource.ativo? } do
-
+              if: proc { resource.ativo? } do
     link_to 'Cancelar Pré-Cadastro',
             cancelar_admin_pre_cadastro_path(resource),
             method: :put
@@ -48,7 +47,19 @@ ActiveAdmin.register PreCadastro do
     column :status
     column :tipo
     column :valor
+    column('Data do Pré-Cadastro') { |p| p.created_at }
     actions
+  end
+
+  show do
+    attributes_table do
+      row('Código') { |p| strong p.codigo}
+      row :usuario
+      row :status
+      row :tipo
+      row('Valor') { |p| "R$ #{p.valor.to_i},00" }
+      row('Data do Pré-Cadastro') { |p| p.created_at }
+    end
   end
 
   form do |f|
