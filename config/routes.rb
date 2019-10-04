@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-  root :to => 'contribuicoes#index'
+  root to: 'contribuicoes#index'
 
   resources :planos, only: [:new, :create]
 
@@ -21,14 +21,15 @@ Rails.application.routes.draw do
   devise_scope :usuario do
     get     'login',      to: 'devise/sessions#new'
     get     'cadastro',   to: 'devise/registrations#new'
-    get     'logout',     to: 'devise/sessions#destroy'
-    delete  'logout',     to: 'devise/sessions#destroy'
+    get     'logout',     to: 'usuarios/sessions#destroy'
+    delete  'logout',     to: 'usuarios/sessions#destroy'
   end
 
   devise_for :usuarios, path_names: { sign_in: 'login',
                                       sign_out: 'logout',
                                       sign_up: 'cadastro',
                                       edit: 'meus-dados' },
-                        controllers: { registrations: 'usuarios/registrations'}
-  
+                        controllers: { registrations: 'usuarios/registrations',
+                                       sessions: 'usuarios/sessions' }
+
 end

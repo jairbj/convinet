@@ -13,8 +13,19 @@ ActiveAdmin.register Usuario do
 # end
   actions :all, except: [:destroy]
 
+  member_action :logar, method: :put do
+    sign_in(:usuario, resource)
+    redirect_to root_path
+  end
+
   action_item :pre_cadastro, only: :show do
-    link_to 'Criar pré-cadastro', new_admin_pre_cadastro_path(pre_cadastro: {usuario_id: resource.id})
+    link_to 'Criar pré-cadastro', new_admin_pre_cadastro_path(pre_cadastro: { usuario_id: resource.id })
+  end
+
+  action_item :logar, only: :show do
+    link_to 'Logar como usuário',
+            logar_admin_usuario_path(resource),
+            method: :put
   end
 
   permit_params :nome,

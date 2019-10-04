@@ -6,6 +6,10 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_out_path_for(_resource_or_scope)
-    root_path
+    if current_admin_user
+      admin_usuario_path(@return_usuario)
+    else
+      root_path
+    end
   end
 end
