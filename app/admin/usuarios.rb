@@ -18,6 +18,19 @@ ActiveAdmin.register Usuario do
     redirect_to root_path
   end
 
+  member_action :resetar_senha, method: :put do
+    resource.password = resource.cpf
+    resource.password_confirmation = resource.password
+
+    if resource.save
+      redirect_to admin_usuario_path(resource),
+                  notice: 'Senha resetada com sucesso. A nova senha é o CPF do usuário, sem pontos e sem traços.'
+    else
+      redirect_to admin_usuario_path(resource),
+                  alert: 'Erro ao resetar senha do usuário, tente novamente.'
+    end
+  end
+
   action_item :pre_cadastro, only: :show do
     link_to 'Criar pré-cadastro', new_admin_pre_cadastro_path(pre_cadastro: { usuario_id: resource.id })
   end
@@ -26,6 +39,13 @@ ActiveAdmin.register Usuario do
     link_to 'Logar como usuário',
             logar_admin_usuario_path(resource),
             method: :put
+  end
+
+  action_item :resetar_senha, only: :show do
+    link_to 'Resetar senha',
+            resetar_senha_admin_usuario_path(resource),
+            method: :put,
+            data: { confirm: "Tem certeza que deseja resetar a senha do usuário #{usuario.nome}? Essa operação não poderá ser desfeita" }
   end
 
   permit_params :nome,
