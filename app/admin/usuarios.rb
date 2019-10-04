@@ -70,9 +70,10 @@ ActiveAdmin.register Usuario do
   index do
     selectable_column
     id_column
-    column(:nome) { |c| link_to(c.nome, admin_usuario_path(c)) }
+    column(:nome) { |u| link_to(u.nome, admin_usuario_path(u)) }
     column :email
     column 'CPF', :cpf_formatado
+    column('Data de Cadastro') { |u| u.created_at }
     actions
   end
 
